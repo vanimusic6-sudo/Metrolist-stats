@@ -38,6 +38,7 @@ import com.metrolist.music.utils.InnerTubeXPlayer
 import com.metrolist.music.utils.dataStore
 import com.metrolist.music.utils.safeDataStoreEdit
 import com.metrolist.music.utils.reportException
+import com.metrolist.music.utils.StatsLogController
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -89,6 +90,8 @@ class App :
 
         // Plant logging before extraction services initialize.
         Timber.plant(Timber.DebugTree())
+        // Fork only: keep a copy of the same lines somewhere a phone can read them.
+        StatsLogController.setEnabled(true)
         InnerTubeXPlayer.initialize(this)
 
         // Pre-read Coil cache size on background to avoid runBlocking in newImageLoader

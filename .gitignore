@@ -117,3 +117,7 @@ app/src/main/cpp/coverart/
 .cortexkit
 .mcp.json
 *.har
+
+# Fork only: signing material and the local SDK path never belong in the repository.
+app/keystore/
+local.properties

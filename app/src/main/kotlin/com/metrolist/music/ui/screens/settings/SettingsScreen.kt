@@ -136,6 +136,11 @@ fun SettingsScreen(
                     icon = painterResource(R.drawable.security),
                     title = { Text(stringResource(R.string.privacy)) },
                     onClick = { navController.navigate("settings/privacy") }
+                ),
+                Material3SettingsItem(
+                    icon = painterResource(R.drawable.bug_report),
+                    title = { Text(stringResource(R.string.stats_title)) },
+                    onClick = { navController.navigate("settings/stats") }
                 )
             )
         )

@@ -990,4 +990,14 @@
     <string name="stream_source_android_vr_desc">Android VR clients (all versions).</string>
     <string name="stream_source_web_creator">WEB_CREATOR</string>
     <string name="stream_source_web_creator_desc">Creator web client.</string>
+    <string name="stats_title">Playback stats</string>
+    <string name="stats_capture">Record a capture</string>
+    <string name="stats_opens">CDN requests</string>
+    <string name="stats_refusals">Refused by CDN</string>
+    <string name="stats_transport_failures">Connection failures</string>
+    <string name="stats_expired_url">Stream URL refreshed</string>
+    <string name="stats_client_rollovers">Switched client</string>
+    <string name="stats_abandoned">Songs given up on</string>
+    <string name="stats_share">Share</string>
+    <string name="stats_clear">Clear</string>
 </resources>

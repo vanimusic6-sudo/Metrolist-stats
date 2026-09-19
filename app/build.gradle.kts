@@ -126,6 +126,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            // Fork only: sign the release directly when a keystore is present, so the stats build
+            // installs from CI without a separate signing step. Absent one, nothing changes and
+            // the output stays unsigned exactly as before.
+            if (file("keystore/release.keystore").exists() &&
+                System.getenv("STORE_PASSWORD") != null
+            ) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
         debug {
             if (applicationIdOverride == null) {
