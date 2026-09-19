@@ -992,6 +992,9 @@
     <string name="stream_source_web_creator_desc">Creator web client.</string>
     <string name="stats_title">Playback stats</string>
     <string name="stats_capture">Record a capture</string>
+    <string name="stats_tracks">Tracks played</string>
+    <string name="stats_stalls">Stalls (total)</string>
+    <string name="stats_underruns">Audio underruns</string>
     <string name="stats_opens">CDN requests</string>
     <string name="stats_refusals">Refused by CDN</string>
     <string name="stats_transport_failures">Connection failures</string>

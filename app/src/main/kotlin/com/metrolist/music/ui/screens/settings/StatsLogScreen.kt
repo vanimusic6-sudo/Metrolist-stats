@@ -56,6 +56,10 @@ private data class StatsSummary(
     val expiredUrlRecoveries: Int,
     val clientRollovers: Int,
     val abandonedSongs: Int,
+    val stalls: Int,
+    val stalledMs: Long,
+    val underruns: Int,
+    val tracks: Int,
 ) {
     val refusalPercent: Int get() = if (opens == 0) 0 else refusals * 100 / opens
 }
@@ -67,6 +71,10 @@ private fun summarise(lines: List<String>): StatsSummary {
     var expiredUrl = 0
     var rollovers = 0
     var abandoned = 0
+    var stalls = 0
+    var stalledMs = 0L
+    var underruns = 0
+    var tracks = 0
     for (line in lines) {
         when {
             "cdn-wire-iofail" in line -> transportFailures += 1
@@ -75,12 +83,31 @@ private fun summarise(lines: List<String>): StatsSummary {
                 val status = line.substringAfter("status=", "").takeWhile { it.isDigit() }
                 if ((status.toIntOrNull() ?: 0) >= 400) refusals += 1
             }
+            "buffering-end" in line -> {
+                stalls += 1
+                stalledMs += line.substringAfter("durationMs=", "")
+                    .takeWhile { it.isDigit() }
+                    .toLongOrNull() ?: 0L
+            }
+            "AUDIO UNDERRUN" in line -> underruns += 1
+            "PlaybackHealth: track id=" in line -> tracks += 1
             "Expired URL" in line -> expiredUrl += 1
             "trying the next client" in line -> rollovers += 1
             "exceeded retry limit" in line -> abandoned += 1
         }
     }
-    return StatsSummary(opens, refusals, transportFailures, expiredUrl, rollovers, abandoned)
+    return StatsSummary(
+        opens = opens,
+        refusals = refusals,
+        transportFailures = transportFailures,
+        expiredUrlRecoveries = expiredUrl,
+        clientRollovers = rollovers,
+        abandonedSongs = abandoned,
+        stalls = stalls,
+        stalledMs = stalledMs,
+        underruns = underruns,
+        tracks = tracks,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -122,6 +149,12 @@ fun StatsLogScreen(navController: NavController) {
 
         Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
             Column(Modifier.padding(16.dp)) {
+                StatRow(stringResource(R.string.stats_tracks), summary.tracks.toString())
+                StatRow(
+                    stringResource(R.string.stats_stalls),
+                    "${summary.stalls} (${summary.stalledMs} ms)",
+                )
+                StatRow(stringResource(R.string.stats_underruns), summary.underruns.toString())
                 StatRow(stringResource(R.string.stats_opens), summary.opens.toString())
                 StatRow(
                     stringResource(R.string.stats_refusals),

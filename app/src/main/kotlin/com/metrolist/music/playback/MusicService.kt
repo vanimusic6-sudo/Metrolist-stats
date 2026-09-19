@@ -339,6 +339,9 @@ class MusicService :
 
     private lateinit var audioQuality: com.metrolist.music.constants.AudioQuality
 
+    /** Fork only: records stalls so a comparison rests on the log, not on memory. */
+    private val statsPlaybackHealth = StatsPlaybackHealth()
+
     private var currentQueue: Queue = EmptyQueue
     var queueTitle: String? = null
 
@@ -975,6 +978,7 @@ class MusicService :
                 val newPlayer = createExoPlayer()
                 newPlayer.addListener(this@MusicService)
                 sleepTimer?.let { newPlayer.addListener(it) }
+                statsPlaybackHealth.attachTo(newPlayer)
 
                 sleepTimer?.player = newPlayer
 
@@ -1356,6 +1360,7 @@ class MusicService :
             }
         }
         player.addAnalyticsListener(PlaybackStatsListener(false, this@MusicService))
+        statsPlaybackHealth.attachTo(player)
 
         // Cleanup handled manually in onDestroy/release
         _playerFlow.value = player
